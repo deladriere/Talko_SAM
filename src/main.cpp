@@ -40,8 +40,8 @@ constexpr uint EncoderSettleMs = 25;
 constexpr uint AdcCenter = 2048;
 constexpr uint AdcMax = 4095;
 constexpr uint SoundMax = 4000;
-constexpr uint8_t VersionMajor = 0;
-constexpr uint8_t VersionMinor = 7;
+constexpr uint8_t VersionMajor = 1;
+constexpr uint8_t VersionMinor = 0;
 
 // Common cathode display masks, from segment A in bit 0 to G in bit 6.
 constexpr uint8_t Digits[] = {

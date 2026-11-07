@@ -1,1 +1,4 @@
 .pio/
+.DS_Store
+.vscode/
+/Talko_SAM-0.*.uf2

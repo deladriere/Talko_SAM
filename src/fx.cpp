@@ -135,7 +135,9 @@ void setEffect(Fx effect, uint16_t adc) {
     }
     break;
   case Fx::Delay:
-    parameter = samplesForMs(40 + 660 * adc / AdcMaximum);
+    if (adc > 70) {
+      parameter = samplesForMs(40 + 660 * (adc - 70u) / (AdcMaximum - 70));
+    }
     break;
   case Fx::Glitch:
     if (atGlitchNoon && stutterAtNoon) {
