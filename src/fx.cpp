@@ -31,7 +31,6 @@ int16_t delayLine[DelaySize];
 unsigned delayHead = 0;
 unsigned delayValid = 0;
 Fx delayEffect = Fx::Off;
-uint32_t delayEpoch = 0;
 
 constexpr float Resonance = 0.965f;
 constexpr int CoefficientScale = 1 << 14;
@@ -165,12 +164,11 @@ FxSettings effectSettings() {
   return {Fx(packed >> 16), uint16_t(packed)};
 }
 
-uint8_t processOutputFx(uint8_t sample, FxSettings settings, uint32_t gateEpoch) {
-  if (settings.effect != delayEffect || gateEpoch != delayEpoch) {
-    // Invalidate the old tail in constant time, without clearing RAM in the IRQ.
+uint8_t processOutputFx(uint8_t sample, FxSettings settings) {
+  if (settings.effect != delayEffect) {
+    // Changing effects invalidates the old tail. Gate cutoff only stops its input.
     delayValid = 0;
     delayEffect = settings.effect;
-    delayEpoch = gateEpoch;
   }
   unsigned parameter = settings.parameter;
   if (parameter == 0) {

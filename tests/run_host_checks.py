@@ -1,7 +1,8 @@
 """Render every bank entry and check FX bypass using Clang AddressSanitizer.
 
-These host checks use the real engine and effects with small Arduino shims.
-They do not exercise PWM interrupts, USB, physical controls, or audio timing.
+These host checks use the real engine, effects, and playback code with
+hardware shims. Playback checks simulate the interrupt, gate cutoff and USB
+serial calls. They do not exercise real USB, controls, or RP2040 audio timing.
 """
 
 from pathlib import Path
@@ -36,6 +37,12 @@ def main():
             str(project / "src" / "fx.cpp"), *objects, "-o", str(program),
         ], check=True)
         subprocess.run([str(program)], check=True)
+        playback = build / "playback"
+        subprocess.run([
+            cxx, "-std=c++17", *flags, str(host / "playback.cpp"),
+            str(project / "src" / "fx.cpp"), *objects, "-o", str(playback),
+        ], check=True)
+        subprocess.run([str(playback)], check=True)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.0.1 - 2026-11-07
+
+- In the middle switch position, gate-off stops the voice and clears pending
+  speech while delay and reverb tails continue to ring out.
+- Turning FX fully counterclockwise or changing effects still clears the tail.
+- Document the USB serial label output and the 115200-baud monitor setting.
+- Add playback simulations for gate cutoff, tails, pending-trigger
+  cancellation, FX bypass, and serial label output with host backpressure.
+- Announce and display the patch version at startup, including its RGB LED code.
+
 ## 1.0 - 2026-11-07
 
 - Set the startup display and spoken version to 1.0. The rear LED flashes

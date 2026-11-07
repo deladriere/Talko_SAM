@@ -1,4 +1,4 @@
-# Talko S.A.M. 1.0
+# Talko S.A.M. 1.0.1
 
 Firmware for Talko 2 (RP2040), with ten banks, 161 speech and percussion
 entries, six voice presets, live controls, and effects. Speech is synthesized
@@ -8,7 +8,7 @@ Read the [user manual](https://www.polaxis.be/talko-sam-user-manual/)
 and the [complete vocabulary](docs/VOCABULARY.md).
 
 To install or replace any firmware, put Talko into BOOTSEL mode and copy
-[Talko_SAM-1.0.uf2](Talko_SAM-1.0.uf2) onto the `RPI-RP2` drive.
+[Talko_SAM-1.0.1.uf2](Talko_SAM-1.0.1.uf2) onto the `RPI-RP2` drive.
 Hold BOOTSEL, press and release RESET, then release BOOTSEL. Leave USB
 connected until the copy finishes and the module restarts. Keep the previous
 UF2 if you want to switch back.
@@ -20,9 +20,15 @@ must use BOOTSEL.
 
 Open this folder in PlatformIO and run `pio run` to rebuild the UF2. The output
 is `.pio/build/pico/firmware.uf2`. Use the Upload task or `pio run -t upload`
-with the Talko serial port. Open PlatformIO Monitor at 115200 to see one
-label per triggered phrase as it starts. Alphabet entries show their
-letters, and the vowel and consonant banks show phoneme labels.
+with the Talko serial port.
+
+Talko prints the label of the entry being uttered over **USB serial**.
+Connect a USB data cable, select Talko's serial port, and open PlatformIO
+Monitor or another serial monitor at **115200 baud**. Each entry's label
+appears on its own line when that phrase starts, for example `HELLO`, `A`,
+or `IY`. Alphabet entries show letters; vowel and consonant entries show
+phoneme labels. A queued trigger is reported when its phrase starts.
+Close the serial monitor before connecting Visual Console to the same port.
 
 The PlatformIO platform is pinned to commit
 `4d1ad09d78445f16688627de0819646fd655910e`, which selects Arduino-Pico
@@ -37,9 +43,11 @@ The phoneme stream follows playback across all ten banks.
 
 At startup, the RGB LED uses the Talko2 sequence. Red flashes count the major
 version, one blue flash marks the separator, and green flashes count the
-minor version. For 1.0, the LED flashes red once and blue once, with no
-green count flashes for zero. The S.A.M. voice then says “version one point
-zero” as the display shows `1`, the decimal point, and `0`.
+minor version. A patch version adds a second blue separator and a green
+patch count. For 1.0.1, the LED flashes red once, blue once, blue once,
+then green once, with no minor count flashes for zero. S.A.M. then says
+“version one point zero point one” as the display shows `1`, the decimal
+point, `0`, the decimal point, and `1`.
 
 | Control | Action |
 |---|---|
@@ -52,9 +60,10 @@ zero” as the display shows `1`, the decimal point, and `0`.
 | ERROR held during speech | Loop recent speech. Turn SPEED to shorten or lengthen the loop and PITCH to change its playback rate. Both respond to movement from their positions when ERROR was pressed. Release to resume speech from the same point. The digit flickers during the stutter. |
 
 When triggered during speech, the latest pending entry plays after the
-current phrase. A gate cutoff in the middle switch position clears the
-phrase, any pending trigger, and the delay or reverb tail. In the outer
-positions, echoes and reverb ring out after speech. The encoder, knobs,
+current phrase. A gate cutoff in the middle switch position stops the
+voice and clears any pending trigger. Delay and reverb tails continue
+to ring out after speech, including when the gate closes. Turning FX
+fully counterclockwise or changing effects clears the old tail. The encoder, knobs,
 ERROR, and GATE wake the display from its five-minute Snake screensaver.
 
 | FX glyph | Effect | FX knob |
@@ -115,11 +124,14 @@ preserved unchanged; attribution alone does not resolve redistribution rights.
 
 ## Verification
 
-Version 1.0 builds for RP2040 with the pinned PlatformIO platform and
+Version 1.0.1 builds for RP2040 with the pinned PlatformIO platform and
 Arduino-Pico. Host checks rendered all 161 entries with six voices at three
 speed/pitch scales, with FX off and with Growl, for 5,796 renders under
 AddressSanitizer. An impulse check covers dry output at the bottom of each
-effect, including the corrected Delay bypass. See [release notes](CHANGELOG.md).
+effect, including the corrected Delay bypass. Playback simulations check
+gate cutoff with delay/reverb tails, pending-trigger cancellation, FX
+bypass after a tail, and serial label output with host backpressure.
+See [release notes](CHANGELOG.md).
 
 To repeat those host checks with Clang installed, run
 `python3 tests/run_host_checks.py`.

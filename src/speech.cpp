@@ -184,7 +184,7 @@ void __isr __not_in_flash_func(audioInterrupt)() {
     carrierPhase = 0;
     FxSettings fx = effectSettings();
     uint8_t sample = nextSample(fx.effect == Fx::Glitch ? fx.parameter : 0);
-    sample = processOutputFx(sample, fx, historyEpoch);
+    sample = processOutputFx(sample, fx);
     pwm_set_chan_level(audioSlice, audioChannel, (sample * pwmPeriod) >> 8);
   }
 }

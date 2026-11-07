@@ -14,5 +14,5 @@ struct FxSettings {
 void setupEffects();
 void setEffect(Fx effect, uint16_t adc);
 FxSettings effectSettings();
-uint8_t processOutputFx(uint8_t sample, FxSettings settings, uint32_t gateEpoch);
+uint8_t processOutputFx(uint8_t sample, FxSettings settings);
 void resetGrowl();

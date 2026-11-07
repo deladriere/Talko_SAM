@@ -42,6 +42,7 @@ constexpr uint AdcMax = 4095;
 constexpr uint SoundMax = 4000;
 constexpr uint8_t VersionMajor = 1;
 constexpr uint8_t VersionMinor = 0;
+constexpr uint8_t VersionPatch = 1;
 
 // Common cathode display masks, from segment A in bit 0 to G in bit 6.
 constexpr uint8_t Digits[] = {
@@ -250,6 +251,12 @@ void showVersionLed() {
   delay(200);
   flashVersionLed(100u << 16, VersionMinor);
   delay(200);
+  if (VersionPatch != 0) {
+    flashVersionLed(255u, 1);
+    delay(200);
+    flashVersionLed(100u << 16, VersionPatch);
+    delay(200);
+  }
 }
 
 void announceVersion() {
@@ -263,6 +270,14 @@ void announceVersion() {
   drawDisplay(Digits[VersionMinor], false, DisplayBrightness);
   speakStartup(numbers[VersionMinor]);
   delay(500);
+  if (VersionPatch != 0) {
+    drawDisplay(0, true, DisplayBrightness);
+    speakStartup("POINT");
+    delay(500);
+    drawDisplay(Digits[VersionPatch], false, DisplayBrightness);
+    speakStartup(numbers[VersionPatch]);
+    delay(500);
+  }
 }
 
 void updateDisplay(uint32_t now, uint8_t voice) {

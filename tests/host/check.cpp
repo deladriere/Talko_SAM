@@ -53,9 +53,9 @@ int main() {
     setEffect(fx, 0);
     auto settings = effectSettings();
     unsigned changed = 0;
-    unsigned first = processOutputFx(255, settings, f + 1);
+    unsigned first = processOutputFx(255, settings);
     changed += first != 255;
-    for (unsigned i=1; i<2000; ++i) changed += processOutputFx(128, settings, f + 1) != 128;
+    for (unsigned i=1; i<2000; ++i) changed += processOutputFx(128, settings) != 128;
     if (changed != 0) { printf("Dry bypass failed for FX %u\n",f); return 1; }
     printf("FX=%u at ADC=0: parameter=%u, impulse=%u, altered samples=%u\n", f, settings.parameter, first, changed);
   }
